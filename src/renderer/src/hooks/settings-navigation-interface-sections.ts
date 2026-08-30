@@ -11,6 +11,7 @@ import type { SettingsNavigationBuildOptions } from './settings-navigation-build
 export function buildInterfaceSettingsSections({
   isMac,
   isWindows,
+  isLinux,
   isWebClient,
   managedBrowserCreationEnabled,
   mobileEmulatorCreationEnabled
@@ -29,7 +30,7 @@ export function buildInterfaceSettingsSections({
         showWarpImport: showDesktopOnlySettings,
         showSystemTray: showDesktopOnlySettings && isWindows,
         showMenuBarIcon: showDesktopOnlySettings && isMac,
-        showWindowControlsPosition: showDesktopOnlySettings && !isMac && !isWindows
+        showWindowControlsPosition: showDesktopOnlySettings && isLinux
       }),
       group: 'interface'
     },
