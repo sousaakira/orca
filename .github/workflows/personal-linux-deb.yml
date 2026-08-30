@@ -1,0 +1,159 @@
+# Personal fork-only Linux .deb builder for sousaakira/orca.
+# Keeps window-controls feature + weekly/manual sync from stablyai/orca main.
+# Does nothing on stablyai/orca even if this file exists there.
+name: Personal Linux .deb
+
+on:
+  schedule:
+    # Sundays 12:00 UTC (~09:00 Brazil)
+    - cron: '0 12 * * 0'
+  workflow_dispatch:
+    inputs:
+      sync_upstream:
+        description: Merge stablyai/orca main into this branch before building
+        type: boolean
+        default: true
+      create_release:
+        description: Publish/replace the personal-linux-deb GitHub Release
+        type: boolean
+        default: true
+
+concurrency:
+  group: personal-linux-deb
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-deb:
+    name: Sync + build .deb
+    if: github.repository == 'sousaakira/orca'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout personal branch
+        uses: actions/checkout@v6
+        with:
+          ref: personal/linux-deb
+          fetch-depth: 0
+
+      - name: Sync upstream main
+        if: github.event_name == 'schedule' || inputs.sync_upstream
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/stablyai/orca.git 2>/dev/null || git remote set-url upstream https://github.com/stablyai/orca.git
+          git fetch upstream main
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git merge --no-edit upstream/main; then
+            echo "Merged upstream/main into personal/linux-deb"
+            git push origin HEAD:personal/linux-deb
+          else
+            echo '::error::Merge conflict with stablyai/orca main. Resolve on personal/linux-deb locally, then re-run this workflow.'
+            git merge --abort || true
+            exit 1
+          fi
+
+      - name: Cache electron-builder downloads
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+          key: personal-electron-builder-linux-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            personal-electron-builder-linux-
+            electron-builder-linux-
+
+      - uses: ./.github/actions/install-node-dependencies
+        with:
+          native-runtime: electron
+
+      - name: Install Linux packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fakeroot dpkg rpm
+
+      - name: Build package inputs
+        run: |
+          set -euo pipefail
+          status=0
+          pnpm run build:cli || status=1
+
+          scripts=(build:relay build:electron-vite:parallel)
+          pids=()
+          for script in "${scripts[@]}"; do
+            pnpm run "$script" &
+            pids+=("$!")
+          done
+
+          for pid in "${pids[@]}"; do
+            wait "$pid" || status=1
+          done
+          exit "$status"
+
+      - name: Project web client from renderer build
+        run: pnpm run build:web-from-renderer
+
+      - name: Build native components
+        run: pnpm run build:native
+
+      - name: Package .deb only
+        env:
+          ORCA_REUSE_PREPARED_NATIVE_RUNTIME: '1'
+        run: >
+          pnpm exec electron-builder
+          --config config/electron-builder.config.cjs
+          --linux deb
+          --x64
+          --publish never
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: orca-ide-linux-deb
+          path: dist/*.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish rolling personal release
+        if: github.event_name == 'schedule' || inputs.create_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          deb_files=(dist/*.deb)
+          if (( ${#deb_files[@]} == 0 )); then
+            echo '::error::No .deb produced in dist/'
+            exit 1
+          fi
+
+          version="$(node -p "require('./package.json').version")"
+          sha="$(git rev-parse --short HEAD)"
+          notes="$(cat <<EOF
+          Personal Linux build for sousaakira/orca.
+
+          - Branch: \`personal/linux-deb\`
+          - Commit: \`${sha}\`
+          - package.json version: \`${version}\`
+          - Includes window-controls Left/Right setting when present on this branch
+          - Synced from \`stablyai/orca\` main when sync was enabled
+
+          Install:
+          \`\`\`bash
+          sudo dpkg -i orca-ide_*.deb
+          sudo apt-get install -f   # if deps missing
+          \`\`\`
+          EOF
+          )"
+
+          if gh release view personal-linux-deb >/dev/null 2>&1; then
+            gh release delete personal-linux-deb --yes --cleanup-tag
+          fi
+
+          gh release create personal-linux-deb "${deb_files[@]}" \
+            --title "Personal Linux .deb (${version} / ${sha})" \
+            --notes "$notes"
