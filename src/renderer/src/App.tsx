@@ -61,15 +61,15 @@ function App(): React.JSX.Element {
   // (sheets, dialogs) mount outside it and would otherwise fall back to 0px and
   // render their controls under the Windows/Linux window-controls overlay.
   useEffect(() => {
+    const insets = windowControlsSideInsets(windowControlsSide)
     const root = document.documentElement.style
     root.setProperty('--window-controls-width', WINDOW_CONTROLS_WIDTH)
     root.setProperty('--window-controls-height', WINDOW_CONTROLS_HEIGHT)
-    root.setProperty('--window-controls-left', windowControlsInsets.left)
-    root.setProperty('--window-controls-right', windowControlsInsets.right)
-    root.setProperty('--window-controls-right-edge-height', windowControlsInsets.rightEdgeHeight)
+    root.setProperty('--window-controls-left', insets.left)
+    root.setProperty('--window-controls-right', insets.right)
+    root.setProperty('--window-controls-right-edge-height', insets.rightEdgeHeight)
     root.setProperty('--mac-traffic-lights-width', MAC_TRAFFIC_LIGHTS_WIDTH)
-    document.documentElement.dataset.windowControlsSide = windowControlsSide
-  }, [windowControlsInsets, windowControlsSide])
+  }, [windowControlsSide])
 
   const { cancelReturnFocusFrame } = floatingWorkspace
   const setAppRootNode = useCallback(

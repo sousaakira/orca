@@ -76,7 +76,6 @@ export function WindowControls({ side }: WindowControlsProps): React.JSX.Element
   return (
     <div
       className={side === 'left' ? 'window-controls window-controls-side-left' : 'window-controls'}
-      data-side={side}
     >
       {/* Why: left side follows GNOME/macOS order (close, minimize, maximize); right keeps Windows order. */}
       {side === 'left' ? (

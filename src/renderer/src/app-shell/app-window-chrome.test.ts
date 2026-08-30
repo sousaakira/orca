@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   hasCustomTitleBar,
   resolveCustomWindowControlsSide,
+  shortcutPlatform,
   windowControlsSideInsets
 } from './app-window-chrome'
 
@@ -33,7 +34,7 @@ describe('resolveCustomWindowControlsSide', () => {
       expect(resolved).toBe('right')
       return
     }
-    // Why: Windows custom chrome keeps the right convention even if a preference is stored.
-    expect(resolved).toBe(process.platform === 'linux' ? 'left' : 'right')
+    // Why: match shortcutPlatform (navigator.userAgent), not process.platform — Vitest's UA is not the host OS.
+    expect(resolved).toBe(shortcutPlatform === 'linux' ? 'left' : 'right')
   })
 })
