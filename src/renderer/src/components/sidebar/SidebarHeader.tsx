@@ -46,8 +46,8 @@ const SidebarHeader = React.memo(function SidebarHeader({
     focusedGroupName && groupBy === 'repo'
       ? focusedGroupName
       : groupBy === 'repo'
-        ? 'Projects'
-        : 'Workspaces'
+        ? translate('dashboard.sidebar.projects', 'Projects')
+        : translate('dashboard.sidebar.workspaces', 'Workspaces')
   const activityLabel = translate(
     agentsViewActive ? 'dashboard.sidebar.closeActivity' : 'dashboard.sidebar.openActivity',
     agentsViewActive ? 'Turn off activity view' : 'View activity'
