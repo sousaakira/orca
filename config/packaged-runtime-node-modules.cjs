@@ -70,7 +70,6 @@ const NODE_BUILTINS = new Set([
   ...builtinModules,
   ...builtinModules.map((moduleName) => `node:${moduleName}`),
   // Why: Electron 43+ ships node:sqlite; packaging hosts on Node 22 omit it from builtinModules.
-  'sqlite',
   'node:sqlite'
 ])
 

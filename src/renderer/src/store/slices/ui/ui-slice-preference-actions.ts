@@ -45,9 +45,13 @@ export function createUiPreferenceActions(set: UISliceSet, get: UISliceGet): Par
 
     groupBy: 'repo',
     // Why: group keys are mode-specific, so clear collapsed state on mode switch — stale keys are meaningless and accumulate.
+    // Why clear client focus: focus only labels repo-group headers; keeping it in workspace-status silently filters with no cue.
     setGroupBy: (g) => {
-      window.api.ui.set({ groupBy: g, collapsedGroups: [] }).catch(console.error)
-      set({ groupBy: g, collapsedGroups: new Set<string>() })
+      const focusedProjectGroupId = g === 'repo' ? get().focusedProjectGroupId : null
+      window.api.ui
+        .set({ groupBy: g, collapsedGroups: [], focusedProjectGroupId })
+        .catch(console.error)
+      set({ groupBy: g, collapsedGroups: new Set<string>(), focusedProjectGroupId })
     },
 
     sortBy: 'recent',

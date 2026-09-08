@@ -38,7 +38,7 @@ export function SidebarWorktreeListDialogs({
             ? translate('auto.components.sidebar.WorktreeList.f9dc6cc5d3', 'Rename Project Group')
             : nameDialog?.type === 'create-nested'
               ? translate(
-                  'auto.components.sidebar.WorktreeList.nestedClientTitle',
+                  'auto.components.sidebar.worktree.list.rows.ProjectGroupDialogs.055a11853b',
                   'New client inside'
                 )
               : translate('auto.components.sidebar.WorktreeList.13757c053c', 'New Project Group')
@@ -51,7 +51,7 @@ export function SidebarWorktreeListDialogs({
               )
             : nameDialog?.type === 'create-nested'
               ? translate(
-                  'auto.components.sidebar.WorktreeList.nestedClientDescription',
+                  'auto.components.sidebar.worktree.list.rows.ProjectGroupDialogs.dae3986701',
                   'Create a client folder nested under this one, then move projects into it.'
                 )
               : translate(

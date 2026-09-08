@@ -140,12 +140,12 @@ export function useProjectGroupDialogs(args: {
         if (!group) {
           toast.error(
             translate(
-              'auto.components.sidebar.WorktreeList.nestedClientCreateFailed',
+              'auto.components.sidebar.worktree.list.rows.use.project.group.dialogs.bcfdab3596',
               'Failed to create client'
             ),
             {
               description: translate(
-                'auto.components.sidebar.WorktreeList.nestedClientCreateFailedDesc',
+                'auto.components.sidebar.worktree.list.rows.use.project.group.dialogs.d942d83a68',
                 'Orca could not create the nested client. Try again after reconnecting if this is a remote host.'
               )
             }

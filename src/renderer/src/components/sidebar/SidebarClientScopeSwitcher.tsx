@@ -15,6 +15,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { ProjectGroupNameDialog } from './ProjectGroupNameDialog'
 import { resolveFocusedProjectGroupId } from '../../../../shared/project-group-focus'
 import { EMPTY_PROJECT_GROUPS } from './worktree-list/viewport/viewport-props'
+import {
+  flattenProjectGroupsForMenu,
+  formatProjectGroupMenuLabel
+} from './project-group-menu-labels'
 
 export function SidebarClientScopeSwitcher(): React.JSX.Element {
   const projectGroups = useAppStore((s) => s.projectGroups ?? EMPTY_PROJECT_GROUPS)
@@ -23,21 +27,16 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
   const createProjectGroup = useAppStore((s) => s.createProjectGroup)
   const [createOpen, setCreateOpen] = useState(false)
 
-  const rootClients = useMemo(
-    () =>
-      projectGroups
-        .filter((group) => group.parentGroupId == null)
-        .slice()
-        .sort(
-          (left, right) => left.tabOrder - right.tabOrder || left.name.localeCompare(right.name)
-        ),
+  const menuClients = useMemo(() => flattenProjectGroupsForMenu(projectGroups), [projectGroups])
+  const groupsById = useMemo(
+    () => new Map(projectGroups.map((group) => [group.id, group])),
     [projectGroups]
   )
   const resolvedFocusId = resolveFocusedProjectGroupId(projectGroups, focusedProjectGroupId)
   const focusedGroup = projectGroups.find((group) => group.id === resolvedFocusId)
   const focusLabel = focusedGroup
-    ? focusedGroup.name
-    : translate('auto.components.sidebar.SidebarClientScopeSwitcher.allClients', 'All clients')
+    ? formatProjectGroupMenuLabel(focusedGroup, groupsById).trim()
+    : translate('auto.components.sidebar.SidebarClientScopeSwitcher.bf84d099da', 'All clients')
 
   // Why: deleting a focused client must not leave a sticky empty sidebar after catalog refresh.
   React.useEffect(() => {
@@ -74,7 +73,7 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
                 size="icon-xs"
                 className="text-muted-foreground"
                 aria-label={translate(
-                  'auto.components.sidebar.SidebarClientScopeSwitcher.aria',
+                  'auto.components.sidebar.SidebarClientScopeSwitcher.159d02ed2f',
                   'Switch client: {{value0}}',
                   { value0: focusLabel }
                 )}
@@ -86,7 +85,7 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
             {translate(
-              'auto.components.sidebar.SidebarClientScopeSwitcher.tooltip',
+              'auto.components.sidebar.SidebarClientScopeSwitcher.1fc28be149',
               'Clients · {{value0}}',
               { value0: focusLabel }
             )}
@@ -94,7 +93,10 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
         </Tooltip>
         <DropdownMenuContent side="bottom" align="start" sideOffset={6} className="w-56">
           <DropdownMenuLabel className="text-[11px] font-medium text-muted-foreground">
-            {translate('auto.components.sidebar.SidebarClientScopeSwitcher.label', 'Focus client')}
+            {translate(
+              'auto.components.sidebar.SidebarClientScopeSwitcher.5f9196f74c',
+              'Focus client'
+            )}
           </DropdownMenuLabel>
           <DropdownMenuItem onSelect={() => setFocusedProjectGroupId(null)}>
             <span className="flex min-w-0 flex-1 items-center gap-2">
@@ -105,13 +107,13 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
               )}
               <span className="truncate">
                 {translate(
-                  'auto.components.sidebar.SidebarClientScopeSwitcher.allClients',
+                  'auto.components.sidebar.SidebarClientScopeSwitcher.bf84d099da',
                   'All clients'
                 )}
               </span>
             </span>
           </DropdownMenuItem>
-          {rootClients.map((group) => (
+          {menuClients.map((group) => (
             <DropdownMenuItem key={group.id} onSelect={() => setFocusedProjectGroupId(group.id)}>
               <span className="flex min-w-0 flex-1 items-center gap-2">
                 {resolvedFocusId === group.id ? (
@@ -119,7 +121,7 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
                 ) : (
                   <span className="size-3.5 shrink-0" />
                 )}
-                <span className="truncate">{group.name}</span>
+                <span className="truncate">{formatProjectGroupMenuLabel(group, groupsById)}</span>
               </span>
             </DropdownMenuItem>
           ))}
@@ -128,11 +130,11 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
             <Plus className="size-3.5" strokeWidth={2.25} />
             {resolvedFocusId
               ? translate(
-                  'auto.components.sidebar.SidebarClientScopeSwitcher.newClientInside',
+                  'auto.components.sidebar.SidebarClientScopeSwitcher.068ae2c11d',
                   'New client inside…'
                 )
               : translate(
-                  'auto.components.sidebar.SidebarClientScopeSwitcher.newClient',
+                  'auto.components.sidebar.SidebarClientScopeSwitcher.95d7cdc817',
                   'New client…'
                 )}
           </DropdownMenuItem>
@@ -143,30 +145,30 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
         title={
           focusedGroup
             ? translate(
-                'auto.components.sidebar.SidebarClientScopeSwitcher.createInsideTitle',
+                'auto.components.sidebar.SidebarClientScopeSwitcher.c4ff9de729',
                 'New client inside {{value0}}',
                 { value0: focusedGroup.name }
               )
             : translate(
-                'auto.components.sidebar.SidebarClientScopeSwitcher.createTitle',
+                'auto.components.sidebar.SidebarClientScopeSwitcher.deeb49e60c',
                 'New client'
               )
         }
         description={
           focusedGroup
             ? translate(
-                'auto.components.sidebar.SidebarClientScopeSwitcher.createInsideDescription',
+                'auto.components.sidebar.SidebarClientScopeSwitcher.086b546962',
                 'Create a client nested under {{value0}}, then use + on it to add projects.',
                 { value0: focusedGroup.name }
               )
             : translate(
-                'auto.components.sidebar.SidebarClientScopeSwitcher.createDescription',
+                'auto.components.sidebar.SidebarClientScopeSwitcher.be14f13df1',
                 'Create a client folder, then use + on the client to add projects into it.'
               )
         }
         initialName=""
         confirmLabel={translate(
-          'auto.components.sidebar.SidebarClientScopeSwitcher.createConfirm',
+          'auto.components.sidebar.SidebarClientScopeSwitcher.dca8fcfb2d',
           'Create'
         )}
         onOpenChange={setCreateOpen}

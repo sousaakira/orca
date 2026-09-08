@@ -108,28 +108,40 @@ export function ProjectGroupHeaderMenu({
       >
         {isFocused ? (
           <DropdownMenuItem onSelect={() => onClearFocus?.()}>
-            {translate('auto.components.sidebar.WorktreeList.showAllClients', 'Show all clients')}
+            {translate(
+              'auto.components.sidebar.worktree.list.rows.project.group.header.actions.4adc3326bf',
+              'Show all clients'
+            )}
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem onSelect={() => onFocus?.(groupId)}>
-            {translate('auto.components.sidebar.WorktreeList.focusClient', 'Show only this client')}
+            {translate(
+              'auto.components.sidebar.worktree.list.rows.project.group.header.actions.5d2c57d3b0',
+              'Show only this client'
+            )}
           </DropdownMenuItem>
         )}
         {currentGroup && onAddProject ? (
           <DropdownMenuItem onSelect={() => onAddProject(currentGroup)}>
             <Plus className="size-3.5" strokeWidth={2.25} />
-            {translate('auto.components.sidebar.WorktreeList.addProjectToClient', 'Add project…')}
+            {translate(
+              'auto.components.sidebar.worktree.list.rows.project.group.header.actions.8d6183b3de',
+              'Add project…'
+            )}
           </DropdownMenuItem>
         ) : null}
         <DropdownMenuItem onSelect={() => onCreateNestedClient?.(groupId, hostId)}>
           <FolderPlus className="size-3.5" strokeWidth={2.25} />
-          {translate('auto.components.sidebar.WorktreeList.newClientInside', 'New client inside…')}
+          {translate(
+            'auto.components.sidebar.worktree.list.rows.project.group.header.actions.7461bea203',
+            'New client inside…'
+          )}
         </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <FolderInput className="size-3.5" strokeWidth={2.25} />
             {translate(
-              'auto.components.sidebar.WorktreeList.moveClientInto',
+              'auto.components.sidebar.worktree.list.rows.project.group.header.actions.3699214712',
               'Move into another client'
             )}
           </DropdownMenuSubTrigger>
@@ -137,7 +149,7 @@ export function ProjectGroupHeaderMenu({
             {canMoveToTopLevel ? (
               <DropdownMenuItem onSelect={() => onMoveInto?.(groupId, null, hostId)}>
                 {translate(
-                  'auto.components.sidebar.WorktreeList.moveClientToTopLevel',
+                  'auto.components.sidebar.worktree.list.rows.project.group.header.actions.02bb9199b2',
                   'Top level'
                 )}
               </DropdownMenuItem>
@@ -158,7 +170,7 @@ export function ProjectGroupHeaderMenu({
             ) : (
               <DropdownMenuItem disabled>
                 {translate(
-                  'auto.components.sidebar.WorktreeList.moveClientIntoEmpty',
+                  'auto.components.sidebar.worktree.list.rows.project.group.header.actions.b410ee777b',
                   'Create another client first'
                 )}
               </DropdownMenuItem>
@@ -259,7 +271,7 @@ export function ProjectGroupAddProjectButton({
   onAddProject: (projectGroup: ProjectGroup) => void
 }): React.JSX.Element {
   const addLabel = translate(
-    'auto.components.sidebar.WorktreeList.addProjectToClientNamed',
+    'auto.components.sidebar.worktree.list.rows.project.group.header.actions.140510344b',
     'Add project to {{value0}}',
     { value0: label }
   )

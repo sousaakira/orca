@@ -53,7 +53,7 @@ function CompactWorkspaceOverflow({
               type="button"
               className="relative text-muted-foreground"
               aria-label={translate(
-                'auto.components.sidebar.SidebarHeader.moreActions',
+                'auto.components.sidebar.SidebarHeader.a52adae158',
                 'More workspace actions'
               )}
               data-workspace-board-preserve-open={boardAttr}
@@ -64,7 +64,7 @@ function CompactWorkspaceOverflow({
           </DropdownMenuTrigger>
         </TooltipTrigger>
         <TooltipContent side="bottom" sideOffset={6}>
-          {translate('auto.components.sidebar.SidebarHeader.moreActions', 'More workspace actions')}
+          {translate('auto.components.sidebar.SidebarHeader.a52adae158', 'More workspace actions')}
         </TooltipContent>
       </Tooltip>
       <DropdownMenuContent
