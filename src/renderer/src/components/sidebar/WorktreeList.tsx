@@ -274,7 +274,7 @@ const WorktreeList = React.memo(function WorktreeList({
 
   const filtersHideAllRows = shouldFiltersHideAllRows({
     hasFilters,
-    visibleWorktreeCount: visibleWorktrees.length,
+    visibleWorktreeCount: focusedVisibleWorktrees.length,
     visibleFolderWorkspaceCount: visibleScope.visibleFolderWorkspacesForRows.length,
     placeholderRepoCount: rowModel.placeholderRepoIds.size,
     importedWorktreeCardCount: externalWorktreeCards.importedWorktreesByRepo.size
