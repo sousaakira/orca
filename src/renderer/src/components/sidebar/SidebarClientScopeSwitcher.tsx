@@ -156,12 +156,12 @@ export function SidebarClientScopeSwitcher(): React.JSX.Element {
           focusedGroup
             ? translate(
                 'auto.components.sidebar.SidebarClientScopeSwitcher.createInsideDescription',
-                'Create a client nested under {{value0}}, then move projects into it from each project menu.',
+                'Create a client nested under {{value0}}, then use + on it to add projects.',
                 { value0: focusedGroup.name }
               )
             : translate(
                 'auto.components.sidebar.SidebarClientScopeSwitcher.createDescription',
-                'Create a client folder, then move projects into it from each project menu.'
+                'Create a client folder, then use + on the client to add projects into it.'
               )
         }
         initialName=""

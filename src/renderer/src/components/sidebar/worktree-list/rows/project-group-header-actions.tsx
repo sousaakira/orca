@@ -42,6 +42,7 @@ export function ProjectGroupHeaderMenu({
   onClearFocus,
   onCreateNestedClient,
   onMoveInto,
+  onAddProject,
   isFocused
 }: {
   groupId: string
@@ -55,6 +56,7 @@ export function ProjectGroupHeaderMenu({
   onClearFocus?: () => void
   onCreateNestedClient?: (parentGroupId: string, hostId?: ExecutionHostId) => void
   onMoveInto?: (groupId: string, parentGroupId: string | null, hostId?: ExecutionHostId) => void
+  onAddProject?: (projectGroup: ProjectGroup) => void
   isFocused?: boolean
 }): React.JSX.Element {
   const groupsById = useMemo(
@@ -113,6 +115,12 @@ export function ProjectGroupHeaderMenu({
             {translate('auto.components.sidebar.WorktreeList.focusClient', 'Show only this client')}
           </DropdownMenuItem>
         )}
+        {currentGroup && onAddProject ? (
+          <DropdownMenuItem onSelect={() => onAddProject(currentGroup)}>
+            <Plus className="size-3.5" strokeWidth={2.25} />
+            {translate('auto.components.sidebar.WorktreeList.addProjectToClient', 'Add project…')}
+          </DropdownMenuItem>
+        ) : null}
         <DropdownMenuItem onSelect={() => onCreateNestedClient?.(groupId, hostId)}>
           <FolderPlus className="size-3.5" strokeWidth={2.25} />
           {translate('auto.components.sidebar.WorktreeList.newClientInside', 'New client inside…')}
@@ -165,6 +173,121 @@ export function ProjectGroupHeaderMenu({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+export function ProjectGroupHeaderTrailingActions({
+  groupId,
+  hostId,
+  label,
+  projectGroups,
+  isFocused,
+  manualProjectGroup,
+  folderBackedProjectGroup,
+  pathStatus,
+  folderCreateDisabled,
+  onRename,
+  onDelete,
+  onFocus,
+  onClearFocus,
+  onCreateNestedClient,
+  onMoveInto,
+  onAddProject,
+  onCreateFolderWorkspace
+}: {
+  groupId: string
+  hostId?: ExecutionHostId
+  label: string
+  projectGroups: readonly ProjectGroup[]
+  isFocused: boolean
+  manualProjectGroup: ProjectGroup | null
+  folderBackedProjectGroup: ProjectGroup | null
+  pathStatus: FolderWorkspacePathStatus | null
+  folderCreateDisabled: boolean
+  onRename: (groupId: string, currentName: string, hostId?: ExecutionHostId) => void
+  onDelete: (groupId: string, groupName: string, hostId?: ExecutionHostId) => void
+  onFocus: (groupId: string) => void
+  onClearFocus: () => void
+  onCreateNestedClient: (parentGroupId: string, hostId?: ExecutionHostId) => void
+  onMoveInto: (groupId: string, parentGroupId: string | null, hostId?: ExecutionHostId) => void
+  onAddProject: (projectGroup: ProjectGroup) => void
+  onCreateFolderWorkspace: (projectGroup: ProjectGroup) => void
+}): React.JSX.Element {
+  return (
+    <>
+      <ProjectGroupHeaderMenu
+        groupId={groupId}
+        hostId={hostId}
+        label={label}
+        projectGroups={projectGroups}
+        onRename={onRename}
+        onDelete={onDelete}
+        isFocused={isFocused}
+        onFocus={onFocus}
+        onClearFocus={onClearFocus}
+        onCreateNestedClient={onCreateNestedClient}
+        onMoveInto={onMoveInto}
+        onAddProject={onAddProject}
+      />
+      {manualProjectGroup ? (
+        <ProjectGroupAddProjectButton
+          projectGroup={manualProjectGroup}
+          label={label}
+          onAddProject={onAddProject}
+        />
+      ) : null}
+      {folderBackedProjectGroup ? (
+        <ProjectGroupCreateWorkspaceButton
+          projectGroup={folderBackedProjectGroup}
+          label={label}
+          pathStatus={pathStatus}
+          disabled={folderCreateDisabled}
+          onCreate={onCreateFolderWorkspace}
+        />
+      ) : null}
+    </>
+  )
+}
+
+export function ProjectGroupAddProjectButton({
+  projectGroup,
+  label,
+  onAddProject
+}: {
+  projectGroup: ProjectGroup
+  label: string
+  onAddProject: (projectGroup: ProjectGroup) => void
+}): React.JSX.Element {
+  const addLabel = translate(
+    'auto.components.sidebar.WorktreeList.addProjectToClientNamed',
+    'Add project to {{value0}}',
+    { value0: label }
+  )
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          data-repo-header-action=""
+          className={REPO_HEADER_ACTION_BUTTON_CLASS}
+          aria-label={addLabel}
+          onKeyDown={stopRepoHeaderKeyboardToggle}
+          onPointerDown={handleRepoHeaderActionPointerDown}
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            onAddProject(projectGroup)
+          }}
+        >
+          <Plus className="size-3" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" sideOffset={6}>
+        {addLabel}
+      </TooltipContent>
+    </Tooltip>
   )
 }
 

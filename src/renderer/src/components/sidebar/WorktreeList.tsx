@@ -251,6 +251,12 @@ const WorktreeList = React.memo(function WorktreeList({
     },
     [openModal]
   )
+  const handleAddProjectToClient = useCallback(
+    (projectGroup: ProjectGroup) => {
+      openModal('add-repo', { targetProjectGroupId: projectGroup.id })
+    },
+    [openModal]
+  )
 
   useSidebarRevealRequests({
     groupBy,
@@ -335,6 +341,7 @@ const WorktreeList = React.memo(function WorktreeList({
         handleClearFocusedProjectGroup={handleClearFocusedProjectGroup}
         handleCreateNestedClient={projectGroupDialogs.handleCreateNestedClient}
         handleMoveClientInto={projectGroupDialogs.handleMoveClientInto}
+        handleAddProjectToClient={handleAddProjectToClient}
         handleCreateFolderWorkspace={handleCreateFolderWorkspace}
         activeModal={activeModal}
         pendingRevealWorktree={pendingRevealWorktree}

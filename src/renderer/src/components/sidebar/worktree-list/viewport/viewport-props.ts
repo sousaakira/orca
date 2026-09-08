@@ -58,6 +58,7 @@ export type VirtualizedWorktreeViewportProps = {
     parentGroupId: string | null,
     hostId?: ExecutionHostId
   ) => void
+  handleAddProjectToClient: (projectGroup: ProjectGroup) => void
   handleCreateFolderWorkspace: (projectGroup: ProjectGroup) => void
   activeModal: string
   pendingRevealWorktree: PendingSidebarWorktreeReveal | null

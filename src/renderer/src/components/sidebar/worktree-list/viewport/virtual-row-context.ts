@@ -107,6 +107,7 @@ export function buildWorktreeVirtualRowContext(args: BuildArgs): WorktreeVirtual
       onClearFocusedProjectGroup: props.handleClearFocusedProjectGroup,
       onCreateNestedClient: props.handleCreateNestedClient,
       onMoveClientInto: props.handleMoveClientInto,
+      onAddProjectToClient: props.handleAddProjectToClient,
       onCreateFolderWorkspace: props.handleCreateFolderWorkspace,
       onWorkspaceStatusDragOver: statusDrag.handleWorkspaceStatusDragOver,
       onWorkspaceStatusDragLeave: statusDrag.handleWorkspaceStatusDragLeave,
