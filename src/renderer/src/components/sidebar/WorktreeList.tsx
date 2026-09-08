@@ -369,7 +369,9 @@ const WorktreeList = React.memo(function WorktreeList({
         hostedReviewCache={hostedReviewCache}
         workspaceStatuses={workspaceStatuses}
         projectGrouping={projectGrouping}
-        projectGroups={visibleScope.visibleProjectGroupsForRows}
+        // Why full catalog: move/reparent menus need destinations outside the focused subtree;
+        // row rendering already scopes via visibleProjectGroupsForRows above.
+        projectGroups={projectGroups}
         onMoveWorktreeToStatus={statusMutations.moveWorktreeToStatus}
         onMoveWorktreesToStatus={statusMutations.moveWorktreesToStatus}
         onMoveWorktreesToStatusAtIndex={statusMutations.moveWorktreesToStatusAtIndex}
