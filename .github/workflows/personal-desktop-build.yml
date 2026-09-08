@@ -43,7 +43,8 @@ jobs:
             artifact: orca-windows-setup
             path: dist/orca-windows-setup.exe
           - platform: mac-arm64
-            os: macos-14
+            # macos-15 ships Swift 6 (computer-use-macos requires swift-tools-version 6.0).
+            os: macos-15
             artifact: orca-macos-arm64
             path: |
               dist/orca-macos-arm64.dmg
