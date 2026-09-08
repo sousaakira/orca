@@ -7,12 +7,12 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Branch, tag, or SHA to build (default: the branch selected above)
+        description: 'Branch, tag, or SHA to build (default: the branch selected above)'
         required: false
         default: ''
         type: string
       create_release:
-        description: Publish/replace the personal-desktop GitHub Release
+        description: 'Publish/replace the personal-desktop GitHub Release'
         type: boolean
         default: true
 
