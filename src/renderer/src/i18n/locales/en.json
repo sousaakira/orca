@@ -151,6 +151,21 @@
           "statusItem": "status item",
           "activity": "activity"
         }
+      },
+      "windowControlsPosition": {
+        "title": "Window Controls Position",
+        "description": "Place minimize, maximize, and close on the left or right on Linux.",
+        "left": "Left",
+        "right": "Right",
+        "keyword": {
+          "titlebar": "titlebar",
+          "window": "window",
+          "controls": "controls",
+          "linux": "linux",
+          "left": "left",
+          "right": "right",
+          "close": "close"
+        }
       }
     },
     "browser": {
