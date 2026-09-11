@@ -16,7 +16,10 @@ import {
 } from '../../../../../shared/execution-host'
 import { persistedUIValuesEqual } from '../../../../../shared/persisted-ui-equality'
 import { DEFAULT_STATUS_BAR_ITEMS } from '../../../../../shared/constants'
+import { sanitizeFocusedProjectGroupId } from '../../../../../shared/project-group-focus'
 import type { UISlice } from './ui-slice-contract'
+
+export { sanitizeFocusedProjectGroupId }
 
 const MIN_SIDEBAR_WIDTH = 220
 const HYDRATE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
@@ -237,4 +240,17 @@ export function migrateStatusBarItems(items: readonly string[] | undefined): Sta
     }
   }
   return out as StatusBarItem[]
+}
+
+export function hydrateUnexpectedSignoutDismissal(
+  state: Pick<UISlice, 'unexpectedSignoutDismissedVersions'>,
+  version: string | null | undefined
+): Pick<UISlice, 'dismissedUnexpectedSignoutVersion' | 'unexpectedSignoutDismissedVersions'> {
+  const observed = state.unexpectedSignoutDismissedVersions
+  return {
+    dismissedUnexpectedSignoutVersion: version ?? null,
+    // A later sync must never undo any dismissal observed in this session.
+    unexpectedSignoutDismissedVersions:
+      typeof version === 'string' && !observed.includes(version) ? [...observed, version] : observed
+  }
 }
