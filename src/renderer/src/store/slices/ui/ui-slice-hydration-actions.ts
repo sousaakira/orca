@@ -78,7 +78,7 @@ function hydrateStatusBarItems(ui: PersistedUIState): StatusBarItem[] {
     ['_minimaxStatusBarDefaultAdded', 'minimax'],
     ['_antigravityStatusBarDefaultAdded', 'antigravity'],
     ['_grokStatusBarDefaultAdded', 'grok']
-  ] as const satisfies readonly (readonly [keyof PersistedUIState, StatusBarItem])[]
+  ] as const
   for (const [flag, item] of defaults) {
     if (!ui[flag] && !items.includes(item)) {
       items = [...items, item]
